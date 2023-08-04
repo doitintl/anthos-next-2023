@@ -1,0 +1,14 @@
+apiVersion: configsync.gke.io/v1beta1
+kind: RepoSync
+metadata:
+  name: capture
+  namespace: capture
+spec:
+  sourceType: git
+  sourceFormat: unstructured
+  git:
+    repo: git@github.com:doitintl/anthos-next-2023.git
+    branch: main
+    dir: manifests/apps/capture
+    auth: ssh
+    period: 30s
