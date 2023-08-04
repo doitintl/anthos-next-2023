@@ -1,0 +1,33 @@
+apiVersion: configsync.gke.io/v1beta1
+kind: RepoSync
+metadata:
+  name: capture
+  namespace: capture
+spec:
+  sourceType: git
+  sourceFormat: unstructured
+  git:
+    repo: git@github.com:doitintl/anthos-next-2023.git
+    branch: main
+    dir: manifests/apps/capture
+    auth: ssh
+    period: 30s
+    revision:  HEAD
+    secretRef:
+      name:  git-creds
+---
+# role binding for the SA that runs the repo-sync
+# https://cloud.google.com/anthos-config-management/docs/how-to/multiple-repositories#application_operator_tasks 
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: syncs-repo
+  namespace: capture
+subjects:
+- kind: ServiceAccount
+  name: ns-reconciler-capture-capture-7
+  namespace: config-management-system
+roleRef:
+  kind: ClusterRole
+  name: config-management-operator
+  apiGroup: rbac.authorization.k8s.io
