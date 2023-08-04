@@ -12,3 +12,6 @@ spec:
     dir: manifests/apps/capture
     auth: ssh
     period: 30s
+    Revision:  HEAD
+    Secret Ref:
+      Name:  git-creds
