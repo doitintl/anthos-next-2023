@@ -15,3 +15,19 @@ spec:
     revision:  HEAD
     secretRef:
       name:  git-creds
+---
+# role binding for the SA that runs the repo-sync
+# https://cloud.google.com/anthos-config-management/docs/how-to/multiple-repositories#application_operator_tasks 
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: syncs-repo
+  namespace: capture
+subjects:
+- kind: ServiceAccount
+  name: ns-reconciler-capture-capture-7
+  namespace: config-management-system
+roleRef:
+  kind: ClusterRole
+  name: config-management-operator
+  apiGroup: rbac.authorization.k8s.io
