@@ -12,5 +12,5 @@ helmCharts:
 - name: minio
   repo: https://operator.min.io/
   version: 5.0.6
-  releaseName: minio
+  releaseName: operator
   namespace: minio-operator
