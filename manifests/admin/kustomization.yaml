@@ -7,10 +7,3 @@ patches:
 - path: ignore-deployment-mutation-patch.yaml
   target:
     kind: Deployment
-
-helmCharts:
-- name: operator
-  repo: https://operator.min.io/
-  version: 5.0.6
-  releaseName: operator
-  namespace: minio-operator
