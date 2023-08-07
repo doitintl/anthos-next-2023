@@ -1,5 +1,7 @@
 resources:
-- base
+- namespaces.yaml
+- rbac
+- repo-syncs
 
 patches:
 - path: ignore-deployment-mutation-patch.yaml
