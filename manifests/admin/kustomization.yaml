@@ -2,9 +2,15 @@ resources:
 - namespaces.yaml
 - rbac
 - repo-syncs
-- minio.yaml
 
 patches:
 - path: ignore-deployment-mutation-patch.yaml
   target:
     kind: Deployment
+
+helmCharts:
+- name: minio
+  repo: https://operator.min.io/
+  version: v5.0.6
+  releaseName: minio
+  namespace: minio-operator
