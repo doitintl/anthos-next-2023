@@ -6,9 +6,9 @@ import os
 from minio import Minio
 
 client = Minio(
-    'http://localhost:9000/',
-    access_key="D7GROicQiR4UGVl1CRVh",
-    secret_key="SAYxL5bcEXu6k0LrrOGypwRw6Aqmmi3GgFJFurSu",
+    os.environ["MINIO_HOST"],
+    access_key=os.environ["MINIO_ACCESS_KEY"],
+    secret_key=os.environ["MINIO_SECRET_KEY"],
 )
 
 

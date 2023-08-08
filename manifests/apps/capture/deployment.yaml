@@ -22,6 +22,19 @@ spec:
       containers:
       - name: capture
         image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.1
+        env:
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio
+              key: accesskey
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio
+              key: secretkey
+        - name: MINIO_HOST
+          value: "minio:9000"
         resources:
           requests:
             cpu: 100m
