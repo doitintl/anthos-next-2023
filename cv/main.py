@@ -1,4 +1,4 @@
-from tempfile import TemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryFile
 import cv2
 from flask import Flask
 import datetime
@@ -24,7 +24,7 @@ def capture_image():
     filename = f".{datetime.datetime.utcnow().isoformat()}.jpg"
 
 
-    with TemporaryFile() as temp:
+    with NamedTemporaryFile() as temp:
         print(f"capturing image to tempfile {temp.name}")
         cv2.imwrite(temp.name, frame)
         capture.release()
