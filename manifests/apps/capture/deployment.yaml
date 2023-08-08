@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: capture
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.1
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.2
         env:
         - name: MINIO_ACCESS_KEY
           valueFrom:
