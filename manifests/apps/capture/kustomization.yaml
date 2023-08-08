@@ -1,3 +1,9 @@
 resources:
 - deployment.yaml
 
+helmCharts:
+- name: tenant
+  repo: https://operator.min.io/
+  version: 5.0.6
+  releaseName: tenanat
+  namespace: capture
