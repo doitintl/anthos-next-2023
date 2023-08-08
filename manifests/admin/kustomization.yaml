@@ -2,7 +2,7 @@ resources:
 - namespaces.yaml
 - rbac
 - repo-syncs
-- capture
+- minio
 
 patches:
 - path: ignore-deployment-mutation-patch.yaml
