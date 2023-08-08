@@ -20,7 +20,7 @@ spec:
         app: capture
     spec:
       securityContext:
-        runAsUser: 1000
+        privileged: true
       volumes:
       - name: video0
         hostPath:
