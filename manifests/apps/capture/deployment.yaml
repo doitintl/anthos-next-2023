@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-app
+  name: capture
   labels:
-    app: hello-app
+    app: capture
 spec:
   selector:
     matchLabels:
-      app: hello-app
+      app: capture
   replicas: 1
   strategy:
     rollingUpdate:
@@ -17,11 +17,11 @@ spec:
   template:
     metadata:
       labels:
-        app: hello-app
+        app: capture
     spec:
       containers:
-      - name: hello-app
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/hello-app:1.0
+      - name: capture
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.1
         resources:
           requests:
             cpu: 100m
@@ -29,3 +29,27 @@ spec:
           limits:
             cpu: 100m
             memory: 100Mi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - doit-4
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capture
+  namespace: capture
+spec:
+  selector:
+    app: capture
+  type: ClusterIP
+  ports:
+  - name: capture
+    protocol: TCP
+    port: 80
+    targetPort: 5000
