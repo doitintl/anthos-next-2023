@@ -19,8 +19,6 @@ spec:
       labels:
         app: capture
     spec:
-      securityContext:
-        privileged: true
       volumes:
       - name: video0
         hostPath:
@@ -28,6 +26,8 @@ spec:
       containers:
       - name: capture
         image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.2
+        securityContext:
+          privileged: true
         volumeMounts:
           - mountPath: /dev/video0
             name: video0
