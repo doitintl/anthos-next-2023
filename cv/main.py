@@ -17,6 +17,7 @@ def capture_image():
 
     if not capture.isOpened():
         print("no camera found")
+        capture.release()
         return False
 
     ret, frame = capture.read()
@@ -27,11 +28,11 @@ def capture_image():
     with NamedTemporaryFile() as temp:
         print(f"capturing image to tempfile {temp.name}")
         cv2.imwrite(temp.name, frame)
-        capture.release()
         print(f"putting image to bucket {filename}")
         client.fput_object(
             "images", filename, temp.name,
         )
+    capture.release()
     return True
 
 
