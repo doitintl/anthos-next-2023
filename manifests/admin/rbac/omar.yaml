@@ -1,17 +1,18 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: ClusterRole
 metadata:
-  name: gateway-impersonate-davec-anthos-next_omar_anthos-next-devs
+  name: gateway-impersonate-davec-anthos-next_omar.boss_anthos-next-devs
   labels:
     connect.gke.io/owner-feature: connect-gateway
-roleRef:
-  kind: ClusterRole
-  name: gateway-impersonate-davec-anthos-next_omar_anthos-next-devs
-  apiGroup: rbac.authorization.k8s.io
-subjects:
-- kind: ServiceAccount
-  name: connect-agent-sa
-  namespace: gke-connect
+rules:
+- apiGroups:
+  - ""
+  resourceNames:
+  - omar.boss@doit.com
+  resources:
+  - users
+  verbs:
+  - impersonate
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

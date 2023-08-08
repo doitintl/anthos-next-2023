@@ -1,0 +1,10 @@
+resources:
+- namespaces.yaml
+- rbac
+- repo-syncs
+- minio
+
+patches:
+- path: ignore-deployment-mutation-patch.yaml
+  target:
+    kind: Deployment
