@@ -13,31 +13,24 @@ client = Minio(
 
 
 def capture_image():
-    # capture = cv2.VideoCapture(0)
+    try:
 
-    # if not capture.isOpened():
-    #     print("no camera found")
-    #     capture.release()
-    #     return False
+        filename = f".{datetime.datetime.utcnow().isoformat()}.jpg"
+        print(f"filename is {filename}")
+        with NamedTemporaryFile(suffix=".jpg") as temp:
 
-    # ret, frame = capture.read()
+            print(f"capturing image to tempfile {temp.name}")
+            output = os.system(f"v4l2-ctl --device /dev/video0 --set-fmt-video=width=100,height=100,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
+            print(f"v4l2-ctl output: {output}")
+            print(f"putting image to bucket {filename}")
+            client.fput_object(
+                "images", filename, temp.name,
+            )
 
-    filename = f".{datetime.datetime.utcnow().isoformat()}.jpg"
-    with NamedTemporaryFile(suffix=".jpg") as temp:
-        # capture a picture with v4l2
-        print(f"capturing image to tempfile {temp.name}")
-
-        output = os.system(f"v4l2-ctl --device /dev/video0 --set-fmt-video=width=100,height=100,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
-        print(f"v4l2-ctl output: {output}")
-
-
-        # cv2.imwrite(temp.name, frame)
-        print(f"putting image to bucket {filename}")
-        client.fput_object(
-            "images", filename, temp.name,
-        )
-    # capture.release()
-    return True
+        return True
+    except Exception as e:
+        print(f"failed to capture image: {e}")
+        return False
 
 
 # write a small flask REST api to capture image

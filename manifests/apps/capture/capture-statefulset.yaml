@@ -22,7 +22,7 @@ spec:
           # type: CharDevice
       containers:
       - name: capture
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.8
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.9
         securityContext:
           privileged: true
         volumeMounts:
