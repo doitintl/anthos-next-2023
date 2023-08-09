@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  serviceName: minio
+  selector:
+    matchLabels:
+      app: minio
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      volumes:
+      - name: localvolume
+        hostPath: # MinIO generally recommends using locally-attached volumes
+          path: /mnt/minio/disk1/data # Specify a path to a local drive or volume on the Kubernetes worker node
+          type: DirectoryOrCreate # The path to the last directory must exist      containers:
+      containers:
+        - name: minio
+          image: quay.io/minio/minio:latest
+          command:
+          - /bin/bash
+          - -c
+          args: 
+          - minio server /data --console-address :9090
+          env:
+          - name: MINIO_SERVER_URL
+            value: http://192.168.8.147:9090
+          - name: MINIO_BROWSER_REDIRECT_URL
+            value: http://192.168.8.147:9090
+          volumeMounts:
+          - mountPath: /data
+            name: localvolume
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - doit-4
