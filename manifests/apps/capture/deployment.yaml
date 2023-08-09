@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: capture
   labels:
     app: capture
 spec:
+  serviceName: capture
   selector:
     matchLabels:
       app: capture
@@ -21,7 +22,7 @@ spec:
           # type: CharDevice
       containers:
       - name: capture
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.6
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.7
         securityContext:
           privileged: true
         volumeMounts:
