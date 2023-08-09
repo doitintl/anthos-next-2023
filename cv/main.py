@@ -5,24 +5,6 @@ import datetime
 import os
 from minio import Minio
 
-from logging.config import dictConfig
-
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://flask.logging.wsgi_errors_stream',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
-    }
-})
-
 app = Flask(__name__)
 
 client = Minio(
@@ -36,20 +18,20 @@ def capture_image():
     try:
 
         filename = f"{datetime.datetime.utcnow().isoformat()}.jpg"
-        app.logger.info(f"filename is {filename}")
+        print(f"filename is {filename}")
         with NamedTemporaryFile(suffix=".jpg") as temp:
 
-            app.logger.info(f"capturing image to tempfile {temp.name}")
+            print(f"capturing image to tempfile {temp.name}")
             output = os.system(f"v4l2-ctl --device /dev/video0 --set-fmt-video=width=640,height=480,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
-            app.logger.info(f"v4l2-ctl output: {output}")
-            app.logger.info(f"putting image to bucket {filename}")
+            print(f"v4l2-ctl output: {output}")
+            print(f"putting image to bucket {filename}")
             # client.fput_object(
             #     "images", filename, temp.name,
             # )
 
         return True
     except Exception as e:
-        app.logger.info(f"failed to capture image: {e}")
+        print(f"failed to capture image: {e}")
         return False
 
 
@@ -64,7 +46,7 @@ def capture():
 
 @app.route("/notify")
 def notify():
-    app.logger.info("image create notified")
+    print("image create notified")
     return "OK"
 
 
