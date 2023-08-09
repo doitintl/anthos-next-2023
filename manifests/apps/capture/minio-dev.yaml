@@ -10,7 +10,7 @@ metadata:
   labels:
     app: minio
   name: minio
-  namespace: capture # Change this value to match the namespace metadata.name
+  namespace: capture
 spec:
   containers:
   - name: minio
@@ -30,3 +30,20 @@ spec:
     hostPath: # MinIO generally recommends using locally-attached volumes
       path: /mnt/minio/disk1/data # Specify a path to a local drive or volume on the Kubernetes worker node
       type: DirectoryOrCreate # The path to the last directory must exist
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: capture
+spec:
+  selector:
+    app: minio
+  type: ClusterIP
+  ports:
+  - name: minio
+    protocol: TCP
+    port: 5000
+    targetPort: 5000
+---
