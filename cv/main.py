@@ -1,6 +1,6 @@
 from tempfile import NamedTemporaryFile, TemporaryFile
 # import cv2
-from flask import Flask
+from flask import Flask, request
 import datetime
 import os
 from minio import Minio
@@ -68,9 +68,11 @@ def capture():
     return "captured" if stat else "failed"
 
 
-@app.route("/notify")
+@app.route("/notify", methods=['POST'])
 def notify():
     app.logger.info("image create notified")
+    body = request.body
+    app.logger.info(f"body: {body}")
     return "OK"
 
 
