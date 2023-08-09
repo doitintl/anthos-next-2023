@@ -24,8 +24,7 @@ def capture_image():
 
     filename = f".{datetime.datetime.utcnow().isoformat()}.jpg"
 
-
-    with NamedTemporaryFile() as temp:
+    with NamedTemporaryFile(suffix=".jpg") as temp:
         print(f"capturing image to tempfile {temp.name}")
         cv2.imwrite(temp.name, frame)
         print(f"putting image to bucket {filename}")
