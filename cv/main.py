@@ -71,8 +71,9 @@ def capture():
 @app.route("/notify", methods=['POST'])
 def notify():
     app.logger.info("image create notified")
-    body = request.body
-    app.logger.info(f"body: {body}")
+    app.logger.info(f"headers: {request.headers}")
+    app.logger.info(f"data: {request.data}")
+    app.logger.info(f"args: {request.args}")
     return "OK"
 
 
