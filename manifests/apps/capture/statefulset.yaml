@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: capture
-  replicas: 0
+  replicas: 1
   template:
     metadata:
       labels:
@@ -22,7 +22,7 @@ spec:
           # type: CharDevice
       containers:
       - name: capture
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.7
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.8
         securityContext:
           privileged: true
         volumeMounts:

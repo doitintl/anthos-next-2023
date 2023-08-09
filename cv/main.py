@@ -1,5 +1,5 @@
 from tempfile import NamedTemporaryFile, TemporaryFile
-import cv2
+# import cv2
 from flask import Flask
 import datetime
 import os
@@ -13,20 +13,25 @@ client = Minio(
 
 
 def capture_image():
-    capture = cv2.VideoCapture(0)
+    # capture = cv2.VideoCapture(0)
 
-    if not capture.isOpened():
-        print("no camera found")
-        capture.release()
-        return False
+    # if not capture.isOpened():
+    #     print("no camera found")
+    #     capture.release()
+    #     return False
 
-    ret, frame = capture.read()
+    # ret, frame = capture.read()
 
     filename = f".{datetime.datetime.utcnow().isoformat()}.jpg"
-
     with NamedTemporaryFile(suffix=".jpg") as temp:
+        # capture a picture with v4l2
         print(f"capturing image to tempfile {temp.name}")
-        cv2.imwrite(temp.name, frame)
+
+        output = os.system(f"v4l2-ctl --device /dev/video0 --set-fmt-video=width=100,height=100,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
+        print(f"v4l2-ctl output: {output}")
+
+
+        # cv2.imwrite(temp.name, frame)
         print(f"putting image to bucket {filename}")
         client.fput_object(
             "images", filename, temp.name,
