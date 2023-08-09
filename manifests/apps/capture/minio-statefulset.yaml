@@ -28,11 +28,11 @@ spec:
           - -c
           args: 
           - minio server /data --console-address :9090
-          env:
-          - name: MINIO_SERVER_URL
-            value: http://192.168.8.147:9090
-          - name: MINIO_BROWSER_REDIRECT_URL
-            value: http://192.168.8.147:9090
+          # env:
+          # - name: MINIO_SERVER_URL
+          #   value: http://192.168.8.147:9090
+          # - name: MINIO_BROWSER_REDIRECT_URL
+          #   value: http://192.168.8.147:9090
           volumeMounts:
           - mountPath: /data
             name: localvolume
