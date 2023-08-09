@@ -36,7 +36,7 @@ def capture_image():
         client.fput_object(
             "images", filename, temp.name,
         )
-    capture.release()
+    # capture.release()
     return True
 
 
