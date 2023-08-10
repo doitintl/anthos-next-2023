@@ -20,9 +20,11 @@ spec:
         hostPath:
           path: /dev/video0 
           # type: CharDevice
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: capture
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.16
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.17
         securityContext:
           privileged: true
         volumeMounts:
@@ -41,6 +43,8 @@ spec:
               key: secretkey
         - name: MINIO_HOST
           value: "minio.capture.svc.cluster.local:9000"
+        - name: LOAD_CAMERA
+          value: "true"
         resources:
           requests:
             cpu: 100m

@@ -1,3 +1,6 @@
 # opencv-python==4.8.0.74
 flask==2.3.2
 minio==7.1.15
+# OCR libraries
+pytesseract==0.3.10
+pillow==10.0.0

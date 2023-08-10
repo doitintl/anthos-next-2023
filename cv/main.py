@@ -6,6 +6,10 @@ import os
 from minio import Minio
 from logging.config import dictConfig
 
+# OCR libraries
+from PIL import Image
+import pytesseract
+
 dictConfig({
     'version': 1,
     'formatters': {'default': {
@@ -61,19 +65,28 @@ def capture_image():
 
 
 
-
-@app.route("/capture")
-def capture():
-    stat = capture_image()
-    return "captured" if stat else "failed"
+if os.environ["LOAD_CAMERA"] == "true":
+    @app.route("/capture")
+    def capture():
+        stat = capture_image()
+        return "captured" if stat else "failed"
 
 
 @app.route("/notify", methods=['POST'])
 def notify():
     app.logger.info("image create notified")
-    app.logger.info(f"headers: {request.headers}")
-    app.logger.info(f"data: {request.data}")
-    app.logger.info(f"args: {request.args}")
+    app.logger.info(f"request json {request.json}")
+
+    image_name = request.json["Key"]
+
+    with NamedTemporaryFile(suffix=".jpg") as temp:
+        app.logger.info(f"downloading image {image_name} to tempfile {temp.name}")
+        client.fget_object("images", image_name, temp.name)
+        app.logger.info(f"image downloaded to tempfile {temp.name}")
+        msg = pytesseract.image_to_string(Image.open(temp.name))
+        app.logger.info(f"image text: {msg}")
+
+
     return "OK"
 
 
