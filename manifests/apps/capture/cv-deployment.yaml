@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cv
+  labels:
+    app: cv
+spec:
+  selector:
+    matchLabels:
+      app: cv
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cv
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      volumes:
+      - name: gcp-ksa
+        projected:
+          defaultMode: 420
+          sources:
+          - serviceAccountToken:
+              path: token
+              audience: davec-anthos-next.svc.id.goog
+              expirationSeconds: 172800
+          - configMap:
+              name: computer-vision-sa-config
+              optional: false
+              items:
+                - key: "config"
+                  path: "google-application-credentials.json"
+      containers:
+      - name: cv
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.20
+        volumeMounts:
+        - name: gcp-ksa
+          mountPath: /var/run/secrets/tokens/gcp-ksa
+          readOnly: true
+        env:
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio
+              key: accesskey
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio
+              key: secretkey
+        - name: MINIO_HOST
+          value: "minio.capture.svc.cluster.local:9000"
+        - name: LOAD_CAMERA
+          value: "false"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/run/secrets/tokens/gcp-ksa/google-application-credentials.json
+      
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 1000m
+            memory: 1000Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cv
+spec:
+  selector:
+    app: cv
+  type: ClusterIP
+  ports:
+  - name: cv
+    protocol: TCP
+    port: 5000
+    targetPort: 5000
