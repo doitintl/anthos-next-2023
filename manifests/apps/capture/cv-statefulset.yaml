@@ -31,7 +31,7 @@ spec:
               name: minio
               key: secretkey
         - name: MINIO_HOST
-          value: "minio.cv.svc.cluster.local:9000"
+          value: "minio.capture.svc.cluster.local:9000"
         - name: LOAD_CAMERA
           value: "false"
         resources:
