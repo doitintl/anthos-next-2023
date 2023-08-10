@@ -80,8 +80,9 @@ def notify():
     image_name = request.json["Key"]
 
     with NamedTemporaryFile(suffix=".jpg") as temp:
-        app.logger.info(f"downloading image {image_name} to tempfile {temp.name}")
-        client.fget_object("images", image_name, temp.name)
+        (_, bucket, filename) = image_name.split("/")
+        app.logger.info(f"downloading image {bucket}/{image_name} to tempfile {temp.name}")
+        client.fget_object(bucket, filename, temp.name)
         app.logger.info(f"image downloaded to tempfile {temp.name}")
         msg = pytesseract.image_to_string(Image.open(temp.name))
         app.logger.info(f"image text: {msg}")
