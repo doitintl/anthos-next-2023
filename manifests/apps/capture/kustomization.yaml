@@ -2,4 +2,4 @@ resources:
 - capture-statefulset.yaml
 - minio-statefulset.yaml
 - cv-statefulset.yaml
-
+- serviceaccounts
