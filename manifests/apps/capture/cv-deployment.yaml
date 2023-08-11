@@ -56,7 +56,6 @@ spec:
           value: "false"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /var/run/secrets/tokens/gcp-ksa/google-application-credentials.json
-      
         resources:
           requests:
             cpu: 100m
@@ -72,7 +71,7 @@ metadata:
 spec:
   selector:
     app: cv
-  type: ClusterIP
+  type: LoadBalancer
   ports:
   - name: cv
     protocol: TCP
