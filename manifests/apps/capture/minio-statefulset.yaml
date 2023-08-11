@@ -68,5 +68,5 @@ spec:
   ports:
   - name: minio
     protocol: TCP
-    port: 9090
+    port: 80
     targetPort: 9090
