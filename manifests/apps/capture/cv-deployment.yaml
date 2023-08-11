@@ -71,11 +71,11 @@ metadata:
 spec:
   selector:
     app: cv
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - name: cv
     protocol: TCP
-    port: 80
+    port: 5000
     targetPort: 5000
 ---
 kind: ConfigMap
