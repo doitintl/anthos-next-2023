@@ -1,14 +1,19 @@
-from tempfile import NamedTemporaryFile, TemporaryFile
-# import cv2
+from tempfile import NamedTemporaryFile
+
 from flask import Flask, request
 import datetime
 import os
 from minio import Minio
 from logging.config import dictConfig
+# pubsub libraries
+from google.cloud import pubsub_v1
 
 # OCR libraries
 from PIL import Image
 import pytesseract
+
+publisher = pubsub_v1.PublisherClient()
+topic_path = publisher.topic_path("davec-anthos-next", "data")
 
 dictConfig({
     'version': 1,
@@ -79,6 +84,7 @@ def notify():
 
     image_name = request.json["Key"]
 
+    msg = "no text found"
     with NamedTemporaryFile(suffix=".jpg") as temp:
         (bucket, filename) = image_name.split("/")
         app.logger.info(f"downloading image {bucket}/{filename} to tempfile {temp.name}")
@@ -87,7 +93,8 @@ def notify():
         msg = pytesseract.image_to_string(Image.open(temp.name))
         app.logger.info(f"image text: {msg}")
 
-
+    publish_future = publisher.publish(topic_path, msg.encode("utf-8"))
+    app.logger.info(f"publish result: {publish_future.result()}")
     return "OK"
 
 

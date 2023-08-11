@@ -4,3 +4,4 @@ minio==7.1.15
 # OCR libraries
 pytesseract==0.3.10
 pillow==10.0.0
+google-cloud-pubsub==2.18.2
