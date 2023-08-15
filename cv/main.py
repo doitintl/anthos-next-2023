@@ -48,8 +48,8 @@ minio_client = Minio(
 if os.environ["IS_CAPTURING"] == "true":
     @app.route("/capture")
     def capture():
-        stat, image_name = capture_image()
-        return json.dumps({"message": "OK", "image_name": image_name}) if stat else json.dumps({"message": "error"}), 500
+        stat, msg = capture_image()
+        return json.dumps({"message": "OK", "image_name": msg}) if stat else json.dumps({"message": msg}), 500
 
     @app.route("/")
     def index():
@@ -68,8 +68,10 @@ if os.environ["IS_CAPTURING"] == "true":
             with NamedTemporaryFile(suffix=".jpg") as temp:
 
                 app.logger.info(f"capturing image to tempfile {temp.name}")
-                output = os.system(f"v4l2-ctl --device /dev/video0 --set-fmt-video=width=640,height=480,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
+                output = os.system(f"v4l2-ctl --device /dev/video0 --silent --set-fmt-video=width=640,height=480,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
                 app.logger.info(f"v4l2-ctl output: {output}")
+                if output != 0:
+                    return False, "failed to capture image"
                 app.logger.info(f"putting image to bucket {filename}")
                 minio_client.fput_object(
                     "images", filename, temp.name,
@@ -82,7 +84,7 @@ if os.environ["IS_CAPTURING"] == "true":
             return True, filename
         except Exception as e:
             app.logger.info(f"failed to capture image: {e}")
-            return False, None
+            return False, "failed to capture image"
 else:
 
 
