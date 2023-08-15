@@ -36,6 +36,7 @@ dictConfig({
     }
 })
 
+
 app = Flask(__name__)
 
 minio_client = Minio(
@@ -83,11 +84,30 @@ if os.environ["IS_CAPTURING"] == "true":
         # delete the file static/image.jpg
         os.remove("static/image.jpg")
         return {"message": "OK"}, 200 
-
         
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path("davec-anthos-next", "data-sub")
+
+    @app.route("/messages")
+    def messages():
+        with subscriber:
+            response = subscriber.pull(request={"subscription": subscription_path, "max_messages": 10})
+
+            ack_ids = []
+            messages = []
+            for received_message in response.received_messages:
+                app.logger.info(f"Received: {received_message.message.data}.")
+                ack_ids.append(received_message.ack_id)
+                messages.append(received_message.message.data.decode("utf-8"))
+
+            # Acknowledges the received messages so they will not be sent again.
+            subscriber.acknowledge(
+                request={"subscription": subscription_path, "ack_ids": ack_ids}
+            )
+
+            return {"message": "OK", "messages": messages}, 200
+            
 else:
-
-
 
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path("davec-anthos-next", "data")
