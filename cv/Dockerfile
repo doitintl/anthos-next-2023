@@ -1,7 +1,7 @@
 FROM ubuntu:22.10
 
 WORKDIR /app
-COPY main.py requirements.txt  ./
+COPY . ./
 
 RUN apt-get  -qq update && apt-get -qq install -y \
 	--no-install-recommends ffmpeg v4l-utils libsm6 libxext6 \
