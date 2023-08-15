@@ -1,6 +1,7 @@
+import json
 from tempfile import NamedTemporaryFile
 
-from flask import Flask, request
+from flask import Flask, request, render_template, Response
 import datetime
 import os
 from minio import Minio
@@ -62,10 +63,14 @@ def capture_image():
                 "images", filename, temp.name,
             )
 
-        return True
+            # always overwrite image.jpg with the latest image
+            with open("static/image.jpg", "wb") as f:
+                f.write(temp.read())
+
+        return True, filename
     except Exception as e:
         app.logger.info(f"failed to capture image: {e}")
-        return False
+        return False, None
 
 
 
@@ -73,8 +78,17 @@ def capture_image():
 if os.environ["LOAD_CAMERA"] == "true":
     @app.route("/capture")
     def capture():
-        stat = capture_image()
-        return "captured" if stat else "failed"
+        stat, image_name = capture_image()
+        return json.dumps({"message": "OK", "image_name": image_name}) if stat else json.dumps({"message": "error"}), 500
+
+    @app.route("/")
+    def index():
+        return render_template("index.html", **{})
+    
+    @app.route("/clear")
+    def clear():
+        # delete the file static/image.jpg
+        os.remove("static/image.jpg")
 
 
 @app.route("/notify", methods=['POST'])

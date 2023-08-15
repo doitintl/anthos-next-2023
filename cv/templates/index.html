@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang=en xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Entitlement Requests</title>
+
+    <!-- <link rel="icon" href="{{ url_for('static', filename='img/marketplace.svg') }}" type="image/x-icon"> -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|DM+Sans">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="{{ url_for('static', filename = 'capture.js') }}"></script>
+
+    <style>
+        :root {
+            --border-color: #d0d0d0;
+            --icon_size: 36px;
+            --sticky-bg-color: #fff;
+        }
+
+        body {
+            font-family: "Open Sans";
+            padding: 0px 20px;
+        }
+
+        .container {
+            max-width: 1080px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="layout" class="container">
+        <div>
+            <image src="{{ url_for('static', filename='image.jpg') }}"/>
+        </div>
+        <div>
+            <button onClick="capture()" class="waves-effect waves-light btn">
+                <i class="material-icons right">camera</i>Capture</a>
+            </button>
+        </div>
+    </div>
+
+    <script>
+    </script>
+</body>
