@@ -49,7 +49,7 @@ if os.environ["IS_CAPTURING"] == "true":
     @app.route("/capture")
     def capture():
         stat, msg = capture_image()
-        return json.dumps({"message": "OK", "image_name": msg}) if stat else json.dumps({"message": msg}), 500
+        return (json.dumps({"message": "OK", "image_name": msg}), 200) if stat else (json.dumps({"message": msg}), 500)
 
     @app.route("/")
     def index():
@@ -71,6 +71,7 @@ if os.environ["IS_CAPTURING"] == "true":
                 output = os.system(f"v4l2-ctl --device /dev/video0 --silent --set-fmt-video=width=640,height=480,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
                 app.logger.info(f"v4l2-ctl output: {output}")
                 if int(output) != 0:
+                    app.logger.info(f"v4l2-ctl failed with exit code {output}")
                     return False, "failed to capture image"
                 app.logger.info(f"putting image to bucket {filename}")
                 minio_client.fput_object(
@@ -79,6 +80,7 @@ if os.environ["IS_CAPTURING"] == "true":
 
                 # always overwrite image.jpg with the latest image
                 with open("static/image.jpg", "wb") as f:
+                    app.logger.info(f"writing image to static/image.jpg")
                     f.write(temp.read())
 
             return True, filename
