@@ -38,7 +38,7 @@ spec:
       - name: regcred
       containers:
       - name: capture
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.33
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.34
         securityContext:
           privileged: true
         volumeMounts:

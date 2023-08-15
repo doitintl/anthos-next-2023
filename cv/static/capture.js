@@ -42,9 +42,9 @@ async function messages() {
         method: 'GET',
       });
       if (response.ok) {
-        const text = await response.json();
+        const json_response = await response.json();
         console.log(text);
-        document.getElementById("messages").innerHTML = text;
+        document.getElementById("messages").innerHTML = json_response["messages"];
       }
       else {
         window.alert('Something went wrong... Please try again!');
