@@ -61,13 +61,11 @@ if os.environ["IS_CAPTURING"] == "true":
                     app.logger.info(f"v4l2-ctl failed with exit code {output}")
                     return {"message": "error", "error": e}, 500
                 app.logger.info(f"putting image to bucket {filename}")
-                minio_client.fput_object(
-                    "images", filename, temp.name,
-                )
+                minio_client.fput_object("images", filename, temp.name)
 
+                app.logger.info(f"writing image to static/image.jpg")
                 # always overwrite image.jpg with the latest image
                 with open("static/image.jpg", "wb") as f:
-                    app.logger.info(f"writing image to static/image.jpg")
                     f.write(temp.read())
 
             return {"message": "OK", "image_name": filename}, 200
@@ -84,6 +82,7 @@ if os.environ["IS_CAPTURING"] == "true":
     def clear():
         # delete the file static/image.jpg
         os.remove("static/image.jpg")
+        return {"message": "OK"}, 200 
 
         
 else:
