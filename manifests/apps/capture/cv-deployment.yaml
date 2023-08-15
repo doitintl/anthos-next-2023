@@ -34,7 +34,7 @@ spec:
                   path: "google-application-credentials.json"
       containers:
       - name: cv
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.22
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.24
         volumeMounts:
         - name: gcp-ksa
           mountPath: /var/run/secrets/tokens/gcp-ksa
@@ -52,7 +52,7 @@ spec:
               key: secretkey
         - name: MINIO_HOST
           value: "minio.capture.svc.cluster.local:9000"
-        - name: LOAD_CAMERA
+        - name: IS_CAPTURING
           value: "false"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /var/run/secrets/tokens/gcp-ksa/google-application-credentials.json
