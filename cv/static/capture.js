@@ -43,7 +43,7 @@ async function messages() {
       });
       if (response.ok) {
         const json_response = await response.json();
-        console.log(text);
+        console.log(json_response);
         document.getElementById("messages").innerHTML = json_response["messages"];
       }
       else {
