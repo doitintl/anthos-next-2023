@@ -25,7 +25,7 @@ async function clear() {
       if (response.ok) {
         const text = await response.json();
         console.log(text);
-        window.location.reload();
+        document.getElementById("messages").innerHTML = "";
       }
       else {
         window.alert('Something went wrong... Please try again!');
@@ -44,7 +44,7 @@ async function messages() {
       if (response.ok) {
         const text = await response.json();
         console.log(text);
-        window.location.reload();
+        document.getElementById("messages").innerHTML = text;
       }
       else {
         window.alert('Something went wrong... Please try again!');
