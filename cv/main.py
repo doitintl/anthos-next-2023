@@ -85,11 +85,11 @@ if os.environ["IS_CAPTURING"] == "true":
         os.remove("static/image.jpg")
         return {"message": "OK"}, 200 
         
-    subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path("davec-anthos-next", "data-sub")
 
     @app.route("/messages")
     def messages():
+        subscriber = pubsub_v1.SubscriberClient()
+        subscription_path = subscriber.subscription_path("davec-anthos-next", "data-sub")
         with subscriber:
             response = subscriber.pull(request={"subscription": subscription_path, "max_messages": 10})
 
