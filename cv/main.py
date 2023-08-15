@@ -70,7 +70,7 @@ if os.environ["IS_CAPTURING"] == "true":
                 app.logger.info(f"capturing image to tempfile {temp.name}")
                 output = os.system(f"v4l2-ctl --device /dev/video0 --silent --set-fmt-video=width=640,height=480,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
                 app.logger.info(f"v4l2-ctl output: {output}")
-                if output != 0:
+                if int(output) != 0:
                     return False, "failed to capture image"
                 app.logger.info(f"putting image to bucket {filename}")
                 minio_client.fput_object(
