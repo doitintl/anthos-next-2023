@@ -12,7 +12,7 @@ async function capture() {
         window.alert('Something went wrong... Please try again!');
       }
     } catch (err) {
-      console.log(`Error when captureing image: ${err}`);
+      console.log(`Error when capturing image: ${err}`);
       window.alert('Something went wrong... Please try again!');
     }
 }

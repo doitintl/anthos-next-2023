@@ -59,7 +59,7 @@ if os.environ["IS_CAPTURING"] == "true":
                 app.logger.info(f"v4l2-ctl output: {output}")
                 if int(output) != 0:
                     app.logger.info(f"v4l2-ctl failed with exit code {output}")
-                    return json.dumps({"message": "error", "error": e}), 500
+                    return {"message": "error", "error": e}, 500
                 app.logger.info(f"putting image to bucket {filename}")
                 minio_client.fput_object(
                     "images", filename, temp.name,
@@ -70,10 +70,10 @@ if os.environ["IS_CAPTURING"] == "true":
                     app.logger.info(f"writing image to static/image.jpg")
                     f.write(temp.read())
 
-            return json.dumps({"message": "OK", "image_name": filename}), 200
+            return {"message": "OK", "image_name": filename}, 200
         except Exception as e:
             app.logger.info(f"failed to capture image: {e}")
-            return json.dumps({"message": "error", "error": e}), 500
+            return {"message": "error", "error": e}, 500
         
 
     @app.route("/")
