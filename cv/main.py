@@ -48,19 +48,6 @@ minio_client = Minio(
 if os.environ["IS_CAPTURING"] == "true":
     @app.route("/capture")
     def capture():
-        stat, msg = capture_image()
-        return (json.dumps({"message": "OK", "image_name": msg}), 200) if stat else (json.dumps({"message": msg}), 500)
-
-    @app.route("/")
-    def index():
-        return render_template("index.html", **{})
-    
-    @app.route("/clear")
-    def clear():
-        # delete the file static/image.jpg
-        os.remove("static/image.jpg")
-
-    def capture_image():
         try:
 
             filename = f"{datetime.datetime.utcnow().isoformat()}.jpg"
@@ -72,7 +59,7 @@ if os.environ["IS_CAPTURING"] == "true":
                 app.logger.info(f"v4l2-ctl output: {output}")
                 if int(output) != 0:
                     app.logger.info(f"v4l2-ctl failed with exit code {output}")
-                    return False, "failed to capture image"
+                    return json.dumps({"message": "error", "error": e}), 500
                 app.logger.info(f"putting image to bucket {filename}")
                 minio_client.fput_object(
                     "images", filename, temp.name,
@@ -83,10 +70,22 @@ if os.environ["IS_CAPTURING"] == "true":
                     app.logger.info(f"writing image to static/image.jpg")
                     f.write(temp.read())
 
-            return True, filename
+            return json.dumps({"message": "OK", "image_name": filename}), 200
         except Exception as e:
             app.logger.info(f"failed to capture image: {e}")
-            return False, "failed to capture image"
+            return json.dumps({"message": "error", "error": e}), 500
+        
+
+    @app.route("/")
+    def index():
+        return render_template("index.html", **{})
+    
+    @app.route("/clear")
+    def clear():
+        # delete the file static/image.jpg
+        os.remove("static/image.jpg")
+
+        
 else:
 
 

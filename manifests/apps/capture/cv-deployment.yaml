@@ -34,7 +34,7 @@ spec:
                   path: "google-application-credentials.json"
       containers:
       - name: cv
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.27
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.28
         volumeMounts:
         - name: gcp-ksa
           mountPath: /var/run/secrets/tokens/gcp-ksa
