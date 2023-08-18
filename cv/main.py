@@ -1,5 +1,6 @@
 import json
 from tempfile import NamedTemporaryFile
+from prometheus_flask_exporter import PrometheusMetrics
 
 from flask import Flask, request, render_template, Response
 import datetime
@@ -38,6 +39,9 @@ dictConfig({
 
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
+metrics.info('app_info', 'Application info', version=os.environ["APP_VERSION"])
+
 
 minio_client = Minio(
     os.environ["MINIO_HOST"],

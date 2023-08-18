@@ -64,6 +64,8 @@ spec:
           value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /var/run/secrets/tokens/gcp-ksa/google-application-credentials.json
+        - name: APP_VERSION
+          value: "1.35"
         resources:
           requests:
             cpu: 100m
@@ -95,3 +97,17 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 5000
+---
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: minio
+spec:
+  selector:
+    matchLabels:
+      app: capture
+  endpoints:
+  - port: 5000
+    interval: 30s
+    path: /metrics
+    scheme: HTTP

@@ -56,6 +56,8 @@ spec:
           value: "false"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /var/run/secrets/tokens/gcp-ksa/google-application-credentials.json
+        - name: APP_VERSION
+          value: "1.27"
         resources:
           requests:
             cpu: 100m
@@ -103,3 +105,16 @@ metadata:
   namespace: capture   
 automountServiceAccountToken: false
 ---
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: minio
+spec:
+  selector:
+    matchLabels:
+      app: cv
+  endpoints:
+  - port: 5000
+    interval: 30s
+    path: /metrics
+    scheme: HTTP
