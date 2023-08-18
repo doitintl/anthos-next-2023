@@ -80,7 +80,8 @@ metadata:
   name: minio
 spec:
   selector:
-    app: minio
+    matchLabels:
+      app: minio
   endpoints:
   - port: 9000
     interval: 30s
