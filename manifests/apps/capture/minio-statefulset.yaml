@@ -26,6 +26,9 @@ spec:
           command:
           - /bin/bash
           - -c
+          env:
+          - name: MINIO_PROMETHEUS_AUTH_TYPE
+            value: public
           args: 
           - minio server /data --console-address :9090
           volumeMounts:
@@ -70,3 +73,16 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 9090
+---
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: minio
+spec:
+  selector:
+    app: minio
+  endpoints:
+  - port: 9000
+    interval: 30s
+    path: /minio/v2/metrics/cluster
+    scheme: HTTP
