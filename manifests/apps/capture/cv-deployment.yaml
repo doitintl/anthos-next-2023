@@ -108,7 +108,7 @@ automountServiceAccountToken: false
 apiVersion: monitoring.googleapis.com/v1
 kind: PodMonitoring
 metadata:
-  name: minio
+  name: cv
 spec:
   selector:
     matchLabels:
