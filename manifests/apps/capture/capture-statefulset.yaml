@@ -38,7 +38,7 @@ spec:
       - name: regcred
       containers:
       - name: capture
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.35
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.36
         securityContext:
           privileged: true
         volumeMounts:
@@ -65,7 +65,7 @@ spec:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /var/run/secrets/tokens/gcp-ksa/google-application-credentials.json
         - name: APP_VERSION
-          value: "1.35"
+          value: "1.36"
         resources:
           requests:
             cpu: 100m
@@ -86,7 +86,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: capture
+  name: capture-lb
   namespace: capture
 spec:
   selector:
@@ -96,6 +96,20 @@ spec:
   - name: capture
     protocol: TCP
     port: 80
+    targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capture
+spec:
+  selector:
+    app: capture
+  type: ClusterIP
+  ports:
+  - name: capture
+    protocol: TCP
+    port: 5000
     targetPort: 5000
 ---
 apiVersion: monitoring.googleapis.com/v1
