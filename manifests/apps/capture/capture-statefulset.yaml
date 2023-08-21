@@ -38,7 +38,7 @@ spec:
       - name: regcred
       containers:
       - name: capture
-        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.39
+        image: us-west1-docker.pkg.dev/davec-anthos-next/docker/capture:1.40
         securityContext:
           privileged: true
         volumeMounts:
@@ -65,7 +65,7 @@ spec:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /var/run/secrets/tokens/gcp-ksa/google-application-credentials.json
         - name: APP_VERSION
-          value: "1.39"
+          value: "1.40"
         resources:
           requests:
             cpu: 100m
