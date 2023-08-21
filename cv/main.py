@@ -134,9 +134,7 @@ else:
         
         msg = "no text found" if msg == "" else msg
         
-        with io.Bytes.IO() as msg_stream:
-            msg_stream.write(msg)
-            msg_stream.seek(0)
+        with io.StringIO(msg) as msg_stream:
             minio_client.put_object("cv-output", filename, msg_stream)
 
         # publish_future = publisher.publish(topic_path, msg.encode("utf-8"))
