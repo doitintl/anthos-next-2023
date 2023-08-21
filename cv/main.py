@@ -96,15 +96,13 @@ if os.environ["IS_CAPTURING"] == "true":
 
         with NamedTemporaryFile(suffix=".txt") as temp:
             app.logger.info(f"downloading image {filename} to tempfile {temp.name}")
-            minio_client.fget_object("cv-output", filename, temp.name)
+            minio_client.fget_object("cv-output", f"{filename}.txt", temp.name)
             app.logger.info(f"text downloaded to tempfile {temp.name}")
 
             return {"message": "OK", "messages": str(temp.readline())}, 200
             
 else:
 
-    publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path("davec-anthos-next", "data")
 
     @app.route("/notify", methods=['POST'])
     def notify():
@@ -125,9 +123,6 @@ else:
         
         with io.BytesIO(bytes(msg, 'utf-8')) as msg_stream:
             minio_client.put_object("cv-output", f"{filename}.txt", msg_stream, -1, part_size=1024*1024*10)
-
-        # publish_future = publisher.publish(topic_path, msg.encode("utf-8"))
-        # app.logger.info(f"publish result: {publish_future.result()}")
         return "OK"
 
 
