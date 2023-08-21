@@ -20,6 +20,20 @@ spec:
         hostPath: # MinIO generally recommends using locally-attached volumes
           path: /mnt/minio/disk1/data # Specify a path to a local drive or volume on the Kubernetes worker node
           type: DirectoryOrCreate # The path to the last directory must exist      containers:
+      - name: gcp-ksa
+        projected:
+          defaultMode: 420
+          sources:
+          - serviceAccountToken:
+              path: token
+              audience: davec-anthos-next.svc.id.goog
+              expirationSeconds: 172800
+          - configMap:
+              name: minio-sa-config
+              optional: false
+              items:
+                - key: "config"
+                  path: "google-application-credentials.json"
       containers:
         - name: minio
           image: quay.io/minio/minio:latest
@@ -34,6 +48,9 @@ spec:
           volumeMounts:
           - mountPath: /data
             name: localvolume
+          - name: gcp-ksa
+            mountPath: /var/run/secrets/tokens/gcp-ksa
+            readOnly: true
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -87,3 +104,28 @@ spec:
     interval: 30s
     path: /minio/v2/metrics/cluster
     scheme: HTTP
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: capture
+  name: minio-sa-config
+data:
+  config: |
+    {
+      "type": "external_account",
+      "audience": "identitynamespace:davec-anthos-next.svc.id.goog:https://gkehub.googleapis.com/projects/davec-anthos-next/locations/global/memberships/doit-edge-next",
+      "service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/minio-sa@davec-anthos-next.iam.gserviceaccount.com:generateAccessToken",
+      "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
+      "token_url": "https://sts.googleapis.com/v1/token",
+      "credential_source": {
+        "file": "/var/run/secrets/tokens/gcp-ksa/token"
+      }
+    }
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: minio-sa
+  namespace: capture   
+automountServiceAccountToken: false
