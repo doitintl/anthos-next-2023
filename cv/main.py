@@ -1,3 +1,4 @@
+import io
 import json
 from tempfile import NamedTemporaryFile
 from prometheus_flask_exporter import PrometheusMetrics
@@ -132,9 +133,14 @@ else:
             app.logger.info(f"image text: {msg}")
         
         msg = "no text found" if msg == "" else msg
+        
+        with io.Bytes.IO() as msg_stream:
+            msg_stream.write(msg)
+            msg_stream.seek(0)
+            minio_client.put_object("cv-output", filename, msg_stream)
 
-        publish_future = publisher.publish(topic_path, msg.encode("utf-8"))
-        app.logger.info(f"publish result: {publish_future.result()}")
+        # publish_future = publisher.publish(topic_path, msg.encode("utf-8"))
+        # app.logger.info(f"publish result: {publish_future.result()}")
         return "OK"
 
 
