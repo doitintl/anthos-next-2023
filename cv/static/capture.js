@@ -36,9 +36,9 @@ async function clear() {
     }
 }
 
-async function messages() {
+async function messages(file_name) {
     try {
-      const response = await fetch(`/messages`, {
+      const response = await fetch(`/messages/${file_name}`, {
         method: 'GET',
       });
       if (response.ok) {

@@ -91,26 +91,15 @@ if os.environ["IS_CAPTURING"] == "true":
         return {"message": "OK"}, 200 
         
 
-    @app.route("/messages")
-    def messages():
-        subscriber = pubsub_v1.SubscriberClient()
-        subscription_path = subscriber.subscription_path("davec-anthos-next", "data-sub")
-        with subscriber:
-            response = subscriber.pull(request={"subscription": subscription_path, "max_messages": 10})
+    @app.route("/messages/<filename>")
+    def messages(filename):
 
-            ack_ids = []
-            messages = []
-            for received_message in response.received_messages:
-                app.logger.info(f"Received: {received_message.message.data}.")
-                ack_ids.append(received_message.ack_id)
-                messages.append(received_message.message.data.decode("utf-8"))
+        with NamedTemporaryFile(suffix=".txt") as temp:
+            app.logger.info(f"downloading image {filename} to tempfile {temp.name}")
+            minio_client.fget_object("cv-output", filename, temp.name)
+            app.logger.info(f"text downloaded to tempfile {temp.name}")
 
-            # Acknowledges the received messages so they will not be sent again.
-            subscriber.acknowledge(
-                request={"subscription": subscription_path, "ack_ids": ack_ids}
-            )
-
-            return {"message": "OK", "messages": messages}, 200
+            return {"message": "OK", "messages": str(temp.readline())}, 200
             
 else:
 
@@ -135,7 +124,7 @@ else:
         msg = "no text found" if msg == "" else msg
         
         with io.BytesIO(bytes(msg, 'utf-8')) as msg_stream:
-            minio_client.put_object("cv-output", filename, msg_stream, -1, part_size=1024*1024*10)
+            minio_client.put_object("cv-output", f"{filename}.txt", msg_stream, -1, part_size=1024*1024*10)
 
         # publish_future = publisher.publish(topic_path, msg.encode("utf-8"))
         # app.logger.info(f"publish result: {publish_future.result()}")
