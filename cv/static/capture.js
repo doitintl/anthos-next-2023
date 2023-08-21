@@ -6,6 +6,7 @@ async function capture() {
       if (response.ok) {
         const text = await response.json();
         console.log(text);
+        localStorage.setItem("image_name", text.image_name)
         window.location.reload();
       }
       else {
@@ -36,8 +37,9 @@ async function clear() {
     }
 }
 
-async function messages(file_name) {
+async function messages() {
     try {
+      file_name = localStorage.getItem("image_name")
       const response = await fetch(`/messages/${file_name}`, {
         method: 'GET',
       });
