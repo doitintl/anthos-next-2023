@@ -100,7 +100,7 @@ if os.environ["IS_CAPTURING"] == "true":
             app.logger.info(f"text downloaded to tempfile {temp.name}")
 
             temp.seek(0)
-            return {"message": "OK", "messages": str(temp.readline())}, 200
+            return {"message": "OK", "messages": str(temp.read())}, 200
             
 else:
 
