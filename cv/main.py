@@ -95,12 +95,12 @@ if os.environ["IS_CAPTURING"] == "true":
     def messages(filename):
 
         with NamedTemporaryFile(suffix=".txt") as temp:
-            app.logger.info(f"downloading image {filename} to tempfile {temp.name}")
+            app.logger.info(f"downloading messages {filename}.txt to tempfile {temp.name}")
             minio_client.fget_object("cv-output", f"{filename}.txt", temp.name)
             app.logger.info(f"text downloaded to tempfile {temp.name}")
 
             temp.seek(0)
-            return {"message": "OK", "messages": str(temp.read())}, 200
+            return {"message": "OK", "messages": bytes.decode(temp.read())}, 200
             
 else:
 
