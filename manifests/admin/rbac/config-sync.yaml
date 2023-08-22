@@ -1,0 +1,44 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: config-sync-dashboard-reader
+rules:
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "list"]
+- apiGroups: ["configmanagement.gke.io"]
+  resources: ["configmanagements"]
+  verbs: ["get", "list"]
+- apiGroups: ["configsync.gke.io"]
+  resources: ["rootsyncs", "reposyncs"]
+  verbs: ["get", "list"]
+- apiGroups: ["kpt.dev"]
+  resources: ["resourcegroups"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods", "services"]
+  verbs: ["get", "list"]
+- apiGroups: ["anthos.cloud.google.com"]
+  resources: ["canonicalservices"]
+  verbs: ["get", "list"]
+- apiGroups: ["networking.istio.io"]
+  resources: ["virtualservices"]
+  verbs: ["get", "list"]
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: config-sync-dashboard-reader
+  labels:
+    connect.gke.io/owner-feature: connect-gateway
+subjects:
+  - kind: User
+    name: doitviewer75@gmail.com
+roleRef:
+  kind: ClusterRole
+  name: config-sync-dashboard-reader
+  apiGroup: rbac.authorization.k8s.io
