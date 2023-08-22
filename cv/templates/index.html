@@ -40,7 +40,7 @@
         <div>
             <image src="{{ url_for('static', filename='image.jpg') }}"/>
         </div>
-        <div>
+        <div class="container">
             <button onClick="capture()" class="waves-effect waves-light btn">
                 <i class="material-icons right">camera</i>Capture</a>
             </button>
@@ -51,8 +51,8 @@
                 <i class="material-icons right">message</i>Messages</a>
             </button>
         </div>
+        <div id="messages" class="container" ></div>
     </div>
-    <div id="messages"></div>
     <script>
     </script>
 </body>
