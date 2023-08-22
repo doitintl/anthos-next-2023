@@ -4,7 +4,7 @@ metadata:
   name: cloud-console-reader
 rules:
 - apiGroups: [""]
-  resources: ["nodes", "persistentvolumes", "pods"]
+  resources: ["nodes", "persistentvolumes", "pods", "pods/log"]
   verbs: ["get", "list", "watch"]
 - apiGroups: ["storage.k8s.io"]
   resources: ["storageclasses"]
