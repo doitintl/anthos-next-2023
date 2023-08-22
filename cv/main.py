@@ -100,7 +100,7 @@ if os.environ["IS_CAPTURING"] == "true":
         app.logger.info(f"text downloaded to tempfile {temp.name}")
 
         with open(temp.name) as read_file:
-            rtn = {"message": "OK", "messages": bytes.decode(read_file.read())}, 200
+            rtn = {"message": "OK", "messages": read_file.read()}, 200
 
         temp.close()
         os.unlink(temp.name)
