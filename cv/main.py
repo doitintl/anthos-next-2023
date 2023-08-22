@@ -103,7 +103,7 @@ if os.environ["IS_CAPTURING"] == "true":
             rtn = {"message": "OK", "messages": read_file.read()}, 200
 
         temp.close()
-        os.unlink(temp.name)
+        # os.unlink(temp.name)
         return rtn
 else:
 
