@@ -94,14 +94,17 @@ if os.environ["IS_CAPTURING"] == "true":
     @app.route("/messages/<filename>")
     def messages(filename):
 
-        with NamedTemporaryFile(suffix=".txt") as temp:
-            app.logger.info(f"downloading messages {filename}.txt to tempfile {temp.name}")
-            minio_client.fget_object("cv-output", f"{filename}.txt", temp.name)
-            app.logger.info(f"text downloaded to tempfile {temp.name}")
+        temp = NamedTemporaryFile(suffix=".txt")
+        app.logger.info(f"downloading messages {filename}.txt to tempfile {temp.name}")
+        minio_client.fget_object("cv-output", f"{filename}.txt", temp.name)
+        app.logger.info(f"text downloaded to tempfile {temp.name}")
 
-            temp.seek(0)
-            return {"message": "OK", "messages": bytes.decode(temp.read())}, 200
-            
+        with open(temp.name) as read_file:
+            rtn = {"message": "OK", "messages": bytes.decode(read_file.read())}, 200
+
+        temp.close()
+        os.unlink(temp.name)
+        return rtn
 else:
 
 
