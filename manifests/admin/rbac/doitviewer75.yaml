@@ -1,0 +1,44 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gateway-impersonate-davec-anthos-next_doitviewer75_anthos-next-devs
+  labels:
+    connect.gke.io/owner-feature: connect-gateway
+rules:
+- apiGroups:
+  - ""
+  resourceNames:
+  - doitviewer75@gmail.com
+  resources:
+  - users
+  verbs:
+  - impersonate
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gateway-impersonate-davec-anthos-next_doitviewer75_anthos-next-devs
+  labels:
+    connect.gke.io/owner-feature: connect-gateway
+roleRef:
+  kind: ClusterRole
+  name: gateway-impersonate-davec-anthos-next_doitviewer75_anthos-next-devs
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: connect-agent-sa
+  namespace: gke-connect
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gateway-permission-davec-anthos-next_doitviewer75_anthos-next-devs
+  labels:
+    connect.gke.io/owner-feature: connect-gateway
+subjects:
+- kind: User
+  name: doitviewer75@gmail.com
+roleRef:
+  kind: ClusterRole
+  name: cluster-viewer
+  apiGroup: rbac.authorization.k8s.io
