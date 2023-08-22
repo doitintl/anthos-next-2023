@@ -1,0 +1,83 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cloud-console-reader
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "persistentvolumes", "pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["storage.k8s.io"]
+  resources: ["storageclasses"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gateway-impersonate
+  labels:
+    connect.gke.io/owner-feature: connect-gateway
+rules:
+- apiGroups:
+  - ""
+  resourceNames:
+  - doitviewer75@gmail.com
+  - dave.c@doit.com
+  - omar@doit.com
+  - mike.sparr@doit.com
+  - rick.boss@doit.com
+  - yuval@doit.com
+  resources:
+  - users
+  verbs:
+  - impersonate
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gateway-impersonate
+  labels:
+    connect.gke.io/owner-feature: connect-gateway
+roleRef:
+  kind: ClusterRole
+  name: gateway-impersonate
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: connect-agent-sa
+  namespace: gke-connect
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gateway-cluster-admin
+  labels:
+    connect.gke.io/owner-feature: connect-gateway
+subjects:
+  - kind: User
+    name: dave.c@doit.com
+  - kind: User
+    name: omar@doit.com
+  - kind: User
+    name: mike.sparr@doit.com
+  - kind: User
+    name: rick.boss@doit.com
+  - kind: User
+    name: yuval@doit.com
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gateway-cluster-reader
+  labels:
+    connect.gke.io/owner-feature: connect-gateway
+subjects:
+  - kind: User
+    name: doitviewer75@gmail.com
+roleRef:
+  kind: ClusterRole
+  name: cloud-console-reader
+  apiGroup: rbac.authorization.k8s.io
