@@ -37,7 +37,7 @@ metadata:
     connect.gke.io/owner-feature: connect-gateway
 subjects:
   - kind: User
-    name: doitviewer75@gmail.com
+    name: testing@doit.com
 roleRef:
   kind: ClusterRole
   name: config-sync-dashboard-reader

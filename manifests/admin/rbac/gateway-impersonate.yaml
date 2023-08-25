@@ -20,7 +20,7 @@ rules:
 - apiGroups:
   - ""
   resourceNames:
-  - doitviewer75@gmail.com
+  - testing@doit.com
   - dave.c@doit.com
   - omar@doit.com
   - mike.sparr@doit.com
@@ -76,7 +76,7 @@ metadata:
     connect.gke.io/owner-feature: connect-gateway
 subjects:
   - kind: User
-    name: doitviewer75@gmail.com
+    name: testing@doit.com
 roleRef:
   kind: ClusterRole
   name: cloud-console-reader
