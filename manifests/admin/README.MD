@@ -6,7 +6,7 @@
         │   ├── README.MD
         │   ├── namespaces.yaml
         │   ├── rbac
-        │   │   ├── user.yaml
+        │   │   ├── user auth manifests
         │   └── repo-syncs: each file is a repo sync for given namespace
         │       └── capture.yaml
         └── apps: application manifests 
