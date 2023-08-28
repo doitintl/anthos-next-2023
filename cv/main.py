@@ -38,7 +38,7 @@ if os.environ["IS_CAPTURING"] == "true":
             with NamedTemporaryFile(suffix=".jpg") as temp:
 
                 logger.info("capturing image to tempfile", tempfile=temp.name)
-                output = os.system(f"v4l2-ctl --device /dev/video0 --silent --set-fmt-video=width=640,height=480,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
+                output = os.system(f"v4l2-ctl --device /dev/video0 --silent --set-fmt-video=width=1920,height=1080,pixelformat=MJPG --stream-mmap --stream-to={temp.name} --stream-count=1")
                 logger.info("v4l2-ctl output", output=output)
                 if int(output) != 0:
                     logger.error("v4l2-ctl failed with exit code", output=output)
