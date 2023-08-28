@@ -18,25 +18,6 @@ async function capture() {
     }
 }
 
-async function clear() {
-    try {
-      const response = await fetch(`/clear`, {
-        method: 'GET',
-      });
-      if (response.ok) {
-        const text = await response.json();
-        console.log(text);
-        document.getElementById("messages").innerHTML = "";
-      }
-      else {
-        window.alert('Something went wrong... Please try again!');
-      }
-    } catch (err) {
-      console.log(`Error when clearing image: ${err}`);
-      window.alert('Something went wrong... Please try again!');
-    }
-}
-
 async function messages() {
     try {
       file_name = localStorage.getItem("image_name")
