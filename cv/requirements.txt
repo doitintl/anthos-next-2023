@@ -3,7 +3,7 @@ flask==2.3.2
 minio==7.1.15
 # OCR libraries
 pytesseract==0.3.10
-pillow==10.0.0
+pillow==10.0.1
 google-cloud-pubsub==2.18.2
 prometheus-flask-exporter==0.22.4
 structlog==21.5.0
